@@ -138,7 +138,7 @@ void FlashWorker::beginFlashing() {
         firmwareFile.open(QFile::ReadOnly);
 
         QByteArray uploadOutput;
-        if(Web::WebUtils::upload(QUrl("http://my.jetpack/cgi-bin/webpst.cgi"), uploadOutput, firmwareFile.readAll(), "jUploadForm" + QString::number(QDateTime::currentDateTime().toTime_t()), "firmware.sfp")) {
+        if(Web::WebUtils::upload(QUrl("http://my.jetpack/cgi-bin/webpst.cgi"), uploadOutput, firmwareFile.readAll(), "filename1", "firmware.sfp")) {
             qInfo()<<"Upload output:";
             qInfo()<<QString(uploadOutput);
 
