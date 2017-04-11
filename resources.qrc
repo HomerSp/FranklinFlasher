@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/images/up_arrow.png</file>
+        <file>res/data/devices.list</file>
+        <file>res/data/provision_data.json</file>
+    </qresource>
+</RCC>

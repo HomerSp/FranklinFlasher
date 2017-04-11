@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/qml/main.qml</file>
+        <file>res/qml/components/Units.qml</file>
+        <file>res/qml/MainForm.qml</file>
+        <file>res/qml/components/UPButton.qml</file>
+    </qresource>
+</RCC>
