@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>res/fonts/OpenSans-Bold.ttf</file>
         <file>res/fonts/OpenSans-Regular.ttf</file>
+        <file>res/images/icon.svg</file>
     </qresource>
 </RCC>

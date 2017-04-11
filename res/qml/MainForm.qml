@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.1
@@ -7,7 +7,7 @@ import "components"
 Rectangle {
     anchors.fill: parent
 
-    color: '#5f92eb'
+    color: '#009688'
 
     ColumnLayout {
         anchors.centerIn: parent
@@ -19,7 +19,7 @@ Rectangle {
             width: unit.dp(360)
             implicitHeight: unit.dp(80)
             textColor: "white"
-            text: (flashButton.enabled)?flashDevice + " Flash tool\nPlease ensure the device has at least 50% battery before continuing.":flashDevice + " Flash tool"
+            text: (flashButton.enabled)?flashDevice + " Flash tool\nPlease turn on the device and connect to its wifi now.":flashDevice + " Flash tool"
             font.family: openSansRegularFont.name
             font.pixelSize: unit.em(1.3)
             horizontalAlignment: Text.AlignHCenter
