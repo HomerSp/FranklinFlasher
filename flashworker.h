@@ -28,8 +28,6 @@ signals:
     void finished();
 
     void setStatus(QVariant status);
-    void setProgressMax(QVariant max);
-    void setProgress(QVariant progress);
 
 private:
     bool canFlash();
@@ -39,10 +37,6 @@ private:
     QString mDevice;
 
     QTemporaryDir mDir;
-    QProcess* mProcess;
-
-    int mProgressMax;
-    int mProgress;
 
     QMutex mRunningMutex;
     QAtomicInteger<int> mStopped;

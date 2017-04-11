@@ -14,9 +14,6 @@
 FlashWorker::FlashWorker(const QString& device, QObject* parent)
     : QObject(parent),
       mDevice(device),
-      mProcess(nullptr),
-      mProgressMax(100),
-      mProgress(0),
       mStopped(0)
 {
 
@@ -29,12 +26,6 @@ FlashWorker::~FlashWorker() {
     qInfo()<<"Waiting for process to stop";
     QMutexLocker locker(&mRunningMutex);
     qInfo()<<"Process stopped";
-
-    if(mProcess != nullptr) {
-        mProcess->kill();
-        mProcess->waitForFinished();
-        delete mProcess;
-    }
 
     emit finished();
 }

@@ -61,10 +61,6 @@ int main(int argc, char *argv[])
         QObject::connect(flashButton, SIGNAL(clicked()), worker, SLOT(process()));
         QObject::connect(worker, SIGNAL(doneFlashing()), flashButton, SLOT(enable()));
 
-        QObject* flashingProgress = engine.rootObjects().first()->findChild<QObject*>("flashingProgress");
-        QObject::connect(worker, SIGNAL(setProgressMax(QVariant)), flashingProgress, SLOT(setProgressMax(QVariant)));
-        QObject::connect(worker, SIGNAL(setProgress(QVariant)), flashingProgress, SLOT(setProgress(QVariant)));
-
         QObject* statusText = engine.rootObjects().first()->findChild<QObject*>("statusText");
         QObject::connect(worker, SIGNAL(setStatus(QVariant)), statusText, SLOT(setStatus(QVariant)));
 
