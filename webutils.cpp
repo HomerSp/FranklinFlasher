@@ -30,6 +30,7 @@ bool WebUtils::download(const QUrl& url, QByteArray& output, const QHash<QString
     }
 
     QNetworkAccessManager manager;
+    manager.clearAccessCache();
 
     QNetworkReply* reply = nullptr;
     if(postData.size() > 0) {
@@ -78,6 +79,8 @@ bool WebUtils::upload(const QUrl& url, QByteArray& output, const QByteArray& inp
     req.setHeader(QNetworkRequest::ContentLengthHeader, QString::number(data.size()));
 
     QNetworkAccessManager manager;
+    manager.clearAccessCache();
+
     QNetworkReply* reply = manager.post(req, data);
     if(reply == nullptr) {
         return false;
