@@ -147,13 +147,40 @@ void FlashWorker::beginFlashing() {
                 qInfo()<<"Flash output:";
                 qInfo()<<QString(flashOutput);
 
-                emit setStatus("Done flashing");
-                emit doneFlashing();
-                return;
+                if(waitForDeviceReset()) {
+                    emit setStatus("Done flashing");
+                    emit doneFlashing();
+                    return;
+                }
             }
         }
     }
 
     emit setStatus("Could not flash the device, please contact Inficell.");
     emit doneFlashing();
+}
+
+bool FlashWorker::waitForDeviceReset() {
+    int counter = 0;
+    bool notFound = false;
+    do {
+        qInfo()<<"waitForDeviceReset";
+        QByteArray output;
+        if(!Web::WebUtils::download(QUrl("http://my.jetpack/webpst/labpst"), output)) {
+            notFound = true;
+        }
+
+        counter++;
+        if(notFound || counter >= 10 || mStopped == 1) {
+            break;
+        }
+
+        QThread::sleep(1);
+    } while(!notFound);
+
+    if(!notFound && counter >= 10) {
+        return false;
+    }
+
+    return true;
 }

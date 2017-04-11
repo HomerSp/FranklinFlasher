@@ -33,6 +33,7 @@ private:
     bool canFlash();
     void waitForDevice();
     void beginFlashing();
+    bool waitForDeviceReset();
 
     QString mDevice;
 
