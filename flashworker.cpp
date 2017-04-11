@@ -147,6 +147,8 @@ void FlashWorker::beginFlashing() {
                 qInfo()<<"Flash output:";
                 qInfo()<<QString(flashOutput);
 
+                emit setStatus("Waiting for device to reset");
+
                 if(waitForDeviceReset()) {
                     emit setStatus("Done flashing");
                     emit doneFlashing();
