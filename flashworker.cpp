@@ -131,13 +131,20 @@ void FlashWorker::beginFlashing() {
 
     QByteArray preOutput;
     if(Web::WebUtils::download(QUrl("http://my.jetpack/cgi-bin/webpst.cgi?Command=PreFileUpload"), preOutput)) {
+        qInfo()<<"Pre output:";
+        qInfo()<<QString(preOutput);
+
         QFile firmwareFile(dir + "/firmware.sfp");
         firmwareFile.open(QFile::ReadOnly);
 
         QByteArray uploadOutput;
         if(Web::WebUtils::upload(QUrl("http://my.jetpack/cgi-bin/webpst.cgi"), uploadOutput, firmwareFile.readAll(), "jUploadForm" + QString::number(QDateTime::currentDateTime().toTime_t()), "firmware.sfp")) {
+            qInfo()<<"Upload output:";
+            qInfo()<<QString(uploadOutput);
+
             QByteArray flashOutput;
             if(Web::WebUtils::download(QUrl("http://my.jetpack/cgi-bin/webpst.cgi?Command=FirmwareUpdateStart&EraseConfig=1"), flashOutput)) {
+                qInfo()<<"Flash output:";
                 qInfo()<<QString(flashOutput);
 
                 emit setStatus("Done flashing");
