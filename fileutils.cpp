@@ -40,6 +40,10 @@ bool FileUtils::createUPZ(const QString& inputPath, const QString &outputName, c
         fileHeader.append(fileName.toUtf8());
         fileHeader.append('\0');
 
+        for(int i = 0; i < fileHeader.size(); i++) {
+            fileHeader[i] = fileHeader[i] ^ 'a';
+        }
+
         outputFile.write(fileHeader);
 
         QByteArray buffer;
@@ -51,7 +55,11 @@ bool FileUtils::createUPZ(const QString& inputPath, const QString &outputName, c
                 break;
             }
 
-            QByteArray compressedBuffer = ::qCompress(buffer, 1);
+            QByteArray compressedBuffer = ::qCompress(buffer, 9);
+
+            for(int i = 0; i < compressedBuffer.size(); i++) {
+                compressedBuffer[i] = compressedBuffer[i] ^ 'a';
+            }
 
             uint32_t chunkSize = compressedBuffer.size();
             chunkData.append(static_cast<uint8_t>((chunkSize) & 0xFF));
@@ -90,6 +98,9 @@ bool FileUtils::extractUPZ(QFile& inputFile, const QString& outputPath) {
         QByteArray c;
         do {
             c = inputFile.read(1);
+            if(c.size() == 1) {
+                c[0] = c[0] ^ 'a';
+            }
             fileNameData += c;
         } while(c.size() == 1 && c.at(0) != '\0');
 
@@ -121,6 +132,9 @@ bool FileUtils::extractUPZ(QFile& inputFile, const QString& outputPath) {
             }
 
             QByteArray chunkData = inputFile.read(chunkSize);
+            for(int i = 0; i < chunkData.size(); i++) {
+                chunkData[i] = chunkData[i] ^ 'a';
+            }
             outputFile.write(qUncompress(chunkData));
         } while(chunkSize != 0);
 

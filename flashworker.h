@@ -32,12 +32,14 @@ signals:
 private:
     bool canFlash();
     void waitForDevice();
+    bool checkIMEI();
     void beginFlashing();
     bool waitForDeviceReset();
 
     QString mDevice;
 
     QTemporaryDir mDir;
+    QStringList mIMEIWhitelist;
 
     QMutex mRunningMutex;
     QAtomicInteger<int> mStopped;

@@ -6,6 +6,7 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QMutexLocker>
+#include <QRegularExpression>
 
 #include "fileutils.h"
 #include "flashworker.h"
@@ -43,6 +44,12 @@ void FlashWorker::process() {
         return;
     }
 
+    if(!checkIMEI()) {
+        emit setStatus("Could not flash device.");
+        emit doneFlashing();
+        return;
+    }
+
     emit setStatus("Flashing the device.");
     if(mStopped == 1) {
         emit doneFlashing();
@@ -65,6 +72,17 @@ void FlashWorker::processInit() {
 
                 if(FileUtils::extractUPZ(upzFile, dir)) {
                     upzFile.close();
+
+                    QFile imeiFile(dir + "/imei.list");
+                    if(imeiFile.open(QIODevice::ReadOnly)) {
+                        QTextStream stream(&imeiFile);
+                        while(!stream.atEnd()) {
+                            QString line = stream.readLine();
+                            line.replace(QRegularExpression("[^0-9A-Fa-f]"), "");
+                            qDebug()<<"Addinng imei"<<line<<"to whilelist";
+                            mIMEIWhitelist.append(line);
+                        }
+                    }
 
                     emit setStatus("Ready to flash");
                     emit initDone();
@@ -117,6 +135,31 @@ void FlashWorker::waitForDevice() {
 
         QThread::sleep(1);
     } while(!found);
+}
+
+bool FlashWorker::checkIMEI() {
+    if(mIMEIWhitelist.empty()) {
+        return true;
+    }
+
+    QJsonObject obj;
+    obj.insert("Command", "GetDiagnostics");
+
+    QString jsonData = QString(QJsonDocument(obj).toJson());
+
+    QByteArray output;
+    if(!Web::WebUtils::download(QUrl("http://my.jetpack/cgi-bin/about_diagnostics.cgi"), output, jsonData)) {
+        return false;
+    }
+
+    QJsonObject outputObj = QJsonDocument::fromJson(output).object();
+    if(outputObj.contains("IMEI")) {
+        QString imei = outputObj.value("IMEI").toString();
+        qDebug()<<"Got imei"<<imei<<"from device, checking if it can be flashed.";
+        return mIMEIWhitelist.contains(imei);
+    }
+
+    return false;
 }
 
 void FlashWorker::beginFlashing() {
